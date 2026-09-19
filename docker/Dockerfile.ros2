@@ -1,0 +1,32 @@
+# ROS 2 Humble base image (Ubuntu 22.04)
+# See BUILD.md Phase 8.5
+FROM ros:humble-ros-base
+
+# Install Python deps for seg_node and costmap_node
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3-pip \
+    python3-colcon-common-extensions \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install ONNX Runtime for CPU inference
+RUN pip3 install --no-cache-dir \
+    onnxruntime \
+    numpy \
+    opencv-python-headless \
+    pyyaml
+
+# Copy the ROS 2 workspace
+COPY ros2_ws/ /terrasem_ws/
+
+WORKDIR /terrasem_ws
+
+# Build the package
+RUN /bin/bash -c "source /opt/ros/humble/setup.bash && \
+    colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release"
+
+# Source overlay on container start
+COPY docker/ros2_entrypoint.sh /ros2_entrypoint.sh
+RUN chmod +x /ros2_entrypoint.sh
+
+ENTRYPOINT ["/ros2_entrypoint.sh"]
+CMD ["bash"]

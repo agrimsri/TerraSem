@@ -1,0 +1,63 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "terrasem"
+version = "0.1.0"
+description = "Uncertainty-aware semantic occupancy and traversability mapping for off-road autonomous navigation"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+authors = [{ name = "agrimsri", email = "agrimsri26@gmail.com" }]
+keywords = ["autonomous-driving", "semantic-segmentation", "occupancy-mapping", "ros2", "lidar", "camera-lidar-fusion"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "torch",
+    "torchvision",
+    "transformers>=4.40",
+    "timm",
+    "numpy<2.0",
+    "opencv-python-headless",
+    "open3d",
+    "pyyaml",
+    "tqdm",
+    "matplotlib",
+    "pandas",
+    "scikit-learn",
+    "onnx",
+    "onnxruntime",
+    "gradio",
+    "plotly",
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "ruff"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-dir]
+"" = "src"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "C4", "SIM"]
+ignore = ["E501"]  # line length handled by formatter
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101"]  # allow assert in tests
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]

@@ -1,0 +1,30 @@
+# SegFormer-B0 training config
+model:
+  name: segformer_b0
+  pretrained: nvidia/mit-b0
+  num_labels: 11
+  ignore_mismatched_sizes: true
+
+training:
+  seed: 42
+  epochs: 50
+  batch_size: 8       # halve on OOM
+  crop_size: [512, 512]
+  optimizer: adamw
+  lr: 6.0e-5
+  weight_decay: 0.01
+  lr_schedule: poly
+  poly_power: 1.0
+  grad_clip: 1.0
+  mixed_precision: true
+  ignore_index: 0
+
+loss:
+  type: cross_entropy
+  class_weights: null   # set to "inverse_freq" to enable class weighting
+  focal_gamma: 0.0      # set >0 to enable focal loss
+
+smoke:
+  steps: 20
+  images: 8
+  epochs: 1

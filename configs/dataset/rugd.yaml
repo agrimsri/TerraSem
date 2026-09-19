@@ -1,0 +1,6 @@
+# RUGD dataset config (cross-domain evaluation)
+name: rugd
+root: data/rugd
+# TODO (Phase 7): fill in after dataset is downloaded and inspected
+ignore_index: 0
+num_classes: 11

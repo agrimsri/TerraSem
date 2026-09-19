@@ -1,0 +1,15 @@
+# Voxel grid default config
+voxel_size: 0.2        # metres
+max_range: 40.0        # metres — truncate far points
+raycast_stride: 4      # only raycast every Nth point for freespace
+enable_freespace: true
+
+# Bayesian occupancy log-odds
+p_hit: 0.7
+p_miss: 0.4
+l_clamp_min: -2.0
+l_clamp_max: 3.5
+
+# Semantic Dirichlet update
+alpha: 0.1             # Dirichlet prior
+tau: 30.0              # range weight decay (m)

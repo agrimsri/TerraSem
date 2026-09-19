@@ -1,0 +1,37 @@
+# Traversability cost map config (BUILD.md Phase 6)
+
+# Per-class semantic costs [0.0 = free, 1.0 = lethal]
+semantic_costs:
+  void_unlabeled: 0.5
+  smooth_traversable: 0.0
+  rough_traversable: 0.2
+  high_cost_terrain: 0.6
+  non_traversable_veg: 1.0
+  water: 1.0
+  obstacle_static: 1.0
+  obstacle_dynamic: 1.0
+  sky: 0.0
+  barrier: 1.0
+  unknown_other: 0.5
+
+# Geometry thresholds
+slope_max: 25.0
+slope_max_hard: 35.0
+step_max: 0.25
+step_max_hard: 0.50
+
+# Cost fusion weights
+w_slope: 0.4
+w_step: 0.4
+w_roughness: 0.2
+w_geom: 0.5
+w_semantic: 0.5
+lambda_uncertainty: 0.3
+
+# Lethal thresholds
+lethal_occ_threshold: 0.7
+lethal_classes: [water, obstacle_static, obstacle_dynamic, barrier]
+
+# OccupancyGrid values
+unknown_cell_value: -1
+lethal_cell_value: 100

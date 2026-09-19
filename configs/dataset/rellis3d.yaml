@@ -1,0 +1,17 @@
+# RELLIS-3D dataset config
+name: rellis3d
+root: data/rellis3d
+splits_dir: data/splits
+sequences:
+  train: ["00000", "00001", "00002", "00003"]
+  val: ["00004"]
+  test: ["00005", "00006"]
+# Start with sequences 00000 and 00001 (Phase 2)
+initial_sequences: ["00000", "00001"]
+image:
+  width: 1920
+  height: 1200
+  # K will be read from calibration file; do not hardcode here
+lidar: ouster_64  # primary LiDAR
+ignore_index: 0
+num_classes: 11

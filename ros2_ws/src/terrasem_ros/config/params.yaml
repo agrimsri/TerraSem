@@ -1,0 +1,14 @@
+# TerraSem ROS 2 node parameters
+# TODO (Phase 8): populate after nodes are implemented.
+seg_node:
+  ros__parameters:
+    model_path: ""  # path to INT8 ONNX model
+    input_topic: /camera/image_raw
+    output_class_topic: /terrasem/semantic_image
+    output_conf_topic: /terrasem/semantic_confidence
+
+costmap_node:
+  ros__parameters:
+    input_topic: /terrasem/semantic_cloud
+    output_topic: /terrasem/traversability
+    resolution: 0.2

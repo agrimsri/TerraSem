@@ -1,0 +1,16 @@
+# DINOv2 ViT-S/14 + linear head config (label-efficiency experiments)
+model:
+  name: dinov2_linear
+  backbone: facebook/dinov2-small
+  freeze_backbone: true
+  num_labels: 11
+
+training:
+  seed: 42
+  epochs: 20
+  batch_size: 8
+  crop_size: [512, 512]
+  optimizer: adamw
+  lr: 1.0e-4
+  weight_decay: 0.01
+  ignore_index: 0

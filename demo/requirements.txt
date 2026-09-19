@@ -1,0 +1,7 @@
+# Demo-only requirements (no torch — keep the image small)
+onnxruntime
+numpy
+opencv-python-headless
+gradio
+plotly
+pyyaml

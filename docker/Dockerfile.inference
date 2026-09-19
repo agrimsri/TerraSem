@@ -1,0 +1,19 @@
+# Inference-only image (no ROS 2) — for the HF Space and standalone use
+FROM python:3.10-slim
+
+RUN pip install --no-cache-dir \
+    onnxruntime \
+    numpy \
+    opencv-python-headless \
+    pyyaml \
+    gradio \
+    plotly
+
+WORKDIR /app
+COPY src/ /app/src/
+COPY demo/ /app/demo/
+COPY pyproject.toml /app/
+
+RUN pip install --no-cache-dir -e /app
+
+CMD ["python", "/app/demo/app.py"]

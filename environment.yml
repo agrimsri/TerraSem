@@ -1,0 +1,32 @@
+# environment.yml — terrasem-dl conda environment (Python 3.10)
+# Usage: conda env create -f environment.yml
+# Do NOT pin a torch version here — install per pytorch.org selector for your CUDA.
+# After install, record resolved versions in docs/BUILD_LOG.md:
+#   python -c "import torch, transformers, numpy, onnxruntime as ort; \
+#              print(torch.__version__, torch.version.cuda, transformers.__version__, \
+#                    numpy.__version__, ort.__version__)"
+name: terrasem-dl
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip
+  - pip:
+      - torch
+      - torchvision
+      - transformers>=4.40
+      - timm
+      - numpy<2.0
+      - opencv-python-headless
+      - open3d
+      - pyyaml
+      - tqdm
+      - matplotlib
+      - pandas
+      - scikit-learn
+      - onnx
+      - onnxruntime
+      - gradio
+      - plotly
+      - pytest
+      - ruff
