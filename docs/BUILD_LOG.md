@@ -49,3 +49,41 @@ Each phase entry records: what was done, what was measured, what broke, what ass
 ---
 
 <!-- Add a new ## Phase N — ... section after each phase is complete. -->
+
+---
+
+## Phase 1 — Literature Grounding
+
+**Date:** 2026-09-19  
+**Status:** ✅ Complete
+
+### What was done
+- Read abstracts and method sections of all 14 papers listed in BUILD.md §12:
+  RELLIS-3D, GOOSE, GOOSE-Ex, RUGD, SegFormer, DINOv2, OctoMap, MonoScene,
+  TPVFormer, Occ3D, BEVFusion, ImageNet-C, Deep Ensembles, NN Calibration paper.
+- Wrote `docs/related_work.md`: 4 subsections, 14 verified citations, 3 ontology tables.
+- Compiled RELLIS-3D (20 classes), RUGD (24 classes), and GOOSE (64-class summary)
+  ontologies from official sources (GitHub README, arXiv papers).
+
+### What was measured
+- Nothing (this is a literature phase).
+
+### What broke / caveats
+- RUGD website (rugd.vision) was unreachable (TLS timeout). IDs sourced from RUGD paper
+  description. Must verify against downloaded RUGD annotation files in Phase 2.
+- GOOSE full 64-class → TerraSem-11 mapping is a TODO in `ontology.py`; blocked on
+  Phase 2 dataset download.
+- RELLIS-3D exact class ID ordering has a known variant between the repo YAML and paper.
+  Must verify against `label_convert.py` in the official repo once dataset is downloaded.
+- OctoMap should be cited as Hornung et al. 2013, Autonomous Robots
+  (DOI: 10.1007/s10514-012-9321-0).
+
+### Assumptions made
+- RELLIS-3D class IDs in `ontology.py` are from the README and paper; flagged as
+  requiring verification in Phase 2 against `docs/dataset_inventory.md`.
+
+### Next steps
+- Phase 2: Dataset download (sequences 00000, 00001) + inspection → `docs/dataset_inventory.md`
+- Update `RELLIS3D_TO_TERRASEM` in `ontology.py` after verifying IDs
+- Fill GOOSE mapping in `ontology.py` after dataset access
+
