@@ -9,20 +9,10 @@ pinned: false
 license: mit
 ---
 
-# TerraSem Demo
+# TerraSem: Uncertainty-Aware Semantic Occupancy and Traversability Mapping
 
-Live demo for TerraSem — uncertainty-aware semantic occupancy and traversability mapping for off-road autonomous navigation.
+Live interactive demonstration of the TerraSem perception, Bayesian voxel mapping, and traversability cost engine for unstructured off-road autonomy.
 
-**Note:** This demo shows perception output on sample frames. The full ROS 2 stack runs via the Docker image:
-```
-docker pull ghcr.io/agrimsri/terrasem:latest
-docker run --rm -it ghcr.io/agrimsri/terrasem:latest \
-  ros2 launch terrasem_ros terrasem_bringup.launch.py
-```
-
-## Tabs
-- **Segmentation overlay** — TerraSem-11 class predictions overlaid on the RGB image
-- **Traversability heatmap** — 2.5D cost map
-- **3D Semantic Voxels** — precomputed voxel map coloured by class / occupancy / entropy
-
-TODO (Phase 9): implement demo app.
+- **Model**: SegFormer-B0 (ONNX INT8 Quantized)
+- **Primary Benchmark**: RELLIS-3D / RUGD / GOOSE
+- **ROS 2 Integration**: Docker image available at `ghcr.io/agrimsri/terrasem:latest`
