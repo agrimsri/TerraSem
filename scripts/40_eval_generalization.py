@@ -16,9 +16,9 @@ import json
 from pathlib import Path
 
 import matplotlib
-
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+import numpy as np
 import torch
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
@@ -79,7 +79,7 @@ def main() -> None:
     if ckpt_path.exists():
         print(f"Loading checkpoint from {ckpt_path}")
         checkpoint = torch.load(ckpt_path, map_location=device)
-        model.load_state_dict(checkpoint.get("model_state_dict", checkpoint))
+        model.load_state_dict(checkpoint["model_state_dict"] if "model_state_dict" in checkpoint else checkpoint)
     else:
         print(f"Warning: Checkpoint {ckpt_path} not found. Running with pretrained weights.")
     model = model.to(device)
@@ -119,8 +119,9 @@ def main() -> None:
     model.train()
     adapt_loader = DataLoader(rugd_test, batch_size=args.batch_size, shuffle=True)
 
+    step = 0
     max_steps = 25
-    for step, batch in enumerate(adapt_loader):
+    for batch in adapt_loader:
         if step >= max_steps:
             break
         images = batch["image"].to(device)
@@ -133,6 +134,7 @@ def main() -> None:
         loss.backward()
 
         optimizer.step()
+        step += 1
 
     print("Evaluating adapted model on RUGD...")
     rugd_adapted_miou = evaluate_dataset(model, rugd_loader, device)

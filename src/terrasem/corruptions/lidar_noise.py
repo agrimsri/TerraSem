@@ -49,3 +49,4 @@ def apply(
     out = points.copy()
     out[:, :3] = pts * scale[:, None]
     return out
+

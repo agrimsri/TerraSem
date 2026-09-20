@@ -65,3 +65,4 @@ def apply(
         return combined
 
     return attenuated_points.copy()
+

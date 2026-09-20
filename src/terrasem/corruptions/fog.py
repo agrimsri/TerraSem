@@ -38,10 +38,16 @@ def apply(
     rng = np.random.RandomState(seed)
 
     is_channels_first = image.ndim == 3 and image.shape[0] in (1, 3) and image.shape[2] > 3
-    img_hwc = np.transpose(image, (1, 2, 0)) if is_channels_first else image.copy()
+    if is_channels_first:
+        img_hwc = np.transpose(image, (1, 2, 0))
+    else:
+        img_hwc = image.copy()
 
     is_uint8 = img_hwc.dtype == np.uint8
-    img_float = img_hwc.astype(np.float32) / 255.0 if is_uint8 else img_hwc.astype(np.float32)
+    if is_uint8:
+        img_float = img_hwc.astype(np.float32) / 255.0
+    else:
+        img_float = img_hwc.astype(np.float32)
 
     h, w = img_float.shape[:2]
 
@@ -73,7 +79,10 @@ def apply(
     foggy = img_float * transmission + airlight * (1.0 - transmission)
     foggy = np.clip(foggy, 0.0, 1.0)
 
-    out = (foggy * 255.0).round().astype(np.uint8) if is_uint8 else foggy.astype(image.dtype)
+    if is_uint8:
+        out = (foggy * 255.0).round().astype(np.uint8)
+    else:
+        out = foggy.astype(image.dtype)
 
     if is_channels_first:
         out = np.transpose(out, (2, 0, 1))

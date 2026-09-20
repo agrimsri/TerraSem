@@ -8,3 +8,4 @@ if [ -f "/ros2_ws/install/setup.bash" ]; then
 fi
 
 exec "$@"
+
