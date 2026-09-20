@@ -46,45 +46,34 @@ CLASS_COLOURS_HEX: list[str] = [c[2] for c in CLASSES]
 # ---------------------------------------------------------------------------
 # RELLIS-3D → TerraSem-11
 # ---------------------------------------------------------------------------
-# Source: https://github.com/unmannedlab/RELLIS-3D
-# Class IDs and names taken from the official ontology file.
-# TODO (Phase 2): Verify IDs against docs/dataset_inventory.md after running
-#                 scripts/01_inspect_dataset.py — do NOT trust memory.
+# Verified against data/rellis3d/Rellis_3D_ontology/ontology.yaml (Phase 2).
+# Exactly 20 classes defined in official RELLIS-3D ontology.
 
 RELLIS3D_TO_TERRASEM: dict[int, int] = {
-    # id : terrasem_id  — source name
-    0: 0,    # void
-    1: 1,    # concrete  → smooth_traversable
-    3: 2,    # grass     → rough_traversable
-    4: 2,    # sand      → rough_traversable
-    5: 5,    # water     → water
-    6: 4,    # tree      → non_traversable_veg
-    7: 3,    # bush      → high_cost_terrain
-    8: 6,    # building  → obstacle_static
-    9: 8,    # sky       → sky
-    10: 1,   # asphalt   → smooth_traversable
-    12: 6,   # rubble    → obstacle_static
-    15: 3,   # mud       → high_cost_terrain
-    17: 4,   # puddle (vegetation context) — remapped below
-    18: 5,   # puddle    → water
-    19: 7,   # person    → obstacle_dynamic
-    23: 6,   # fence     → obstacle_static
-    27: 7,   # vehicle   → obstacle_dynamic
-    29: 3,   # bush (variant) → high_cost_terrain
-    31: 6,   # pole      → obstacle_static
-    33: 7,   # log       → obstacle_static
-    34: 6,   # object    → obstacle_static
+    0: 0,    # void        → void_unlabeled (ignore_index)
+    1: 1,    # dirt        → smooth_traversable (dirt path)
+    3: 2,    # grass       → rough_traversable
+    4: 4,    # tree        → non_traversable_veg
+    5: 6,    # pole        → obstacle_static
+    6: 5,    # water       → water
+    7: 8,    # sky         → sky
+    8: 7,    # vehicle     → obstacle_dynamic
+    9: 6,    # object      → obstacle_static
+    10: 1,   # asphalt     → smooth_traversable
+    12: 6,   # building    → obstacle_static
+    15: 6,   # log         → obstacle_static
+    17: 7,   # person      → obstacle_dynamic
+    18: 9,   # fence       → barrier
+    19: 3,   # bush        → high_cost_terrain
+    23: 1,   # concrete    → smooth_traversable
+    27: 9,   # barrier     → barrier
+    31: 5,   # puddle      → water
+    33: 3,   # mud         → high_cost_terrain
+    34: 6,   # rubble      → obstacle_static
 }
 
-# UNMAPPED RELLIS-3D class IDs (cannot confidently map; sent to unknown_other):
-RELLIS3D_UNMAPPED: dict[int, str] = {
-    2: "dirt (ambiguous: rough or smooth?)",  # TODO: decide after visual inspection
-    11: "object — generic, needs inspection",
-    13: "pole (variant), already mapped to 6 but confirm",
-    14: "vehicle (variant)",
-    16: "other-object",
-    17: "puddle (mapped to water; double-check context)",
-}
+# UNMAPPED RELLIS-3D class IDs (none — all 20 official classes are mapped)
+RELLIS3D_UNMAPPED: dict[int, str] = {}
 
 
 # ---------------------------------------------------------------------------
