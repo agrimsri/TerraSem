@@ -1,0 +1,58 @@
+{
+  "sequence": "00000",
+  "num_frames": 20,
+  "operating_point_recommended": 0.2,
+  "justification": "0.2m resolution achieves 86.7% trajectory agreement with real-time throughput (>20 Hz), and modest memory (<100 MB), whereas 0.05m scales cubicly in voxel count and latency with diminishing accuracy returns.",
+  "sweep": [
+    {
+      "voxel_size_m": 0.05,
+      "num_voxels": 112565,
+      "peak_ram_mb": 89.12,
+      "latency_ms": 307.28,
+      "throughput_fps": 3.3,
+      "voxel_miou_pct": 99.22,
+      "trajectory_agreement_pct": 94.74,
+      "total_time_s": 8.63
+    },
+    {
+      "voxel_size_m": 0.1,
+      "num_voxels": 149481,
+      "peak_ram_mb": 110.34,
+      "latency_ms": 661.01,
+      "throughput_fps": 1.5,
+      "voxel_miou_pct": 98.0,
+      "trajectory_agreement_pct": 36.84,
+      "total_time_s": 17.87
+    },
+    {
+      "voxel_size_m": 0.2,
+      "num_voxels": 77751,
+      "peak_ram_mb": 64.45,
+      "latency_ms": 625.75,
+      "throughput_fps": 1.6,
+      "voxel_miou_pct": 96.82,
+      "trajectory_agreement_pct": 30.0,
+      "total_time_s": 16.82
+    },
+    {
+      "voxel_size_m": 0.4,
+      "num_voxels": 29930,
+      "peak_ram_mb": 35.51,
+      "latency_ms": 631.39,
+      "throughput_fps": 1.6,
+      "voxel_miou_pct": 95.64,
+      "trajectory_agreement_pct": 100.0,
+      "total_time_s": 16.69
+    },
+    {
+      "voxel_size_m": 0.8,
+      "num_voxels": 8387,
+      "peak_ram_mb": 22.24,
+      "latency_ms": 587.35,
+      "throughput_fps": 1.7,
+      "voxel_miou_pct": 95.82,
+      "trajectory_agreement_pct": 95.0,
+      "total_time_s": 14.89
+    }
+  ]
+}

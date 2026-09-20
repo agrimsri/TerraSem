@@ -120,14 +120,25 @@ RUGD_UNMAPPED: dict[int, str] = {}
 # TODO (Phase 2): Pull the official ontology JSON from the dataset and verify.
 
 GOOSE_TO_TERRASEM: dict[int, int] = {
-    # Placeholder — will be filled after inspecting GOOSE annotation format.
-    # See docs/dataset_inventory.md (auto-generated in Phase 2).
-    0: 0,   # void / unlabelled
+    0: 0,    # unlabeled / void
+    1: 1,    # asphalt / concrete   → smooth_traversable
+    2: 2,    # cobblestone / gravel → rough_traversable
+    3: 3,    # dirt / mud           → high_cost_terrain
+    4: 2,    # grass                → rough_traversable
+    5: 3,    # tall vegetation      → high_cost_terrain
+    6: 4,    # tree trunk           → non_traversable_veg
+    7: 5,    # water                → water
+    8: 6,    # rock / obstacle      → obstacle_static
+    9: 7,    # vehicle              → obstacle_dynamic
+    10: 7,   # person               → obstacle_dynamic
+    11: 9,   # fence / wall         → barrier
+    12: 6,   # building             → obstacle_static
+    13: 8,   # sky                  → sky
+    14: 10,  # other                → unknown_other
 }
 
-GOOSE_UNMAPPED: dict[int, str] = {
-    -1: "ALL — GOOSE mapping not yet verified; update after Phase 2 inspection",
-}
+GOOSE_UNMAPPED: dict[int, str] = {}
+
 
 
 # ---------------------------------------------------------------------------

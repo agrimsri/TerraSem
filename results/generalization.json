@@ -1,0 +1,16 @@
+{
+  "source_dataset": "RELLIS-3D",
+  "source_val_mIoU": 23.46,
+  "targets": {
+    "RUGD": {
+      "zero_shot_mIoU": 13.3,
+      "mIoU_drop": 10.15,
+      "adapted_mIoU": 21.01,
+      "recovery": 7.7
+    },
+    "GOOSE": {
+      "zero_shot_mIoU": 12.47,
+      "mIoU_drop": 10.99
+    }
+  }
+}

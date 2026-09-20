@@ -29,6 +29,14 @@ class TestOntologyMapping:
                 f"RUGD class {src_id} maps to {tgt_id}, outside [0, {NUM_CLASSES-1}]"
             )
 
+    def test_goose_all_values_in_range(self):
+        from terrasem.datasets.ontology import GOOSE_TO_TERRASEM
+        for src_id, tgt_id in GOOSE_TO_TERRASEM.items():
+            assert 0 <= tgt_id < NUM_CLASSES, (
+                f"GOOSE class {src_id} maps to {tgt_id}, outside [0, {NUM_CLASSES-1}]"
+            )
+
+
     def test_rellis3d_unknown_maps_to_unknown_other(self):
         """Any RELLIS-3D ID not in the table should map to unknown_other (10)."""
         assert rellis3d_to_terrasem(9999) == 10
