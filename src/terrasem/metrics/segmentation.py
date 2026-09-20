@@ -33,6 +33,11 @@ class SegmentationMetrics:
         self.ignore_index = ignore_index
         self._conf: np.ndarray = np.zeros((num_classes, num_classes), dtype=np.int64)
 
+    @property
+    def confusion_matrix(self) -> np.ndarray:
+        """Accumulated confusion matrix of shape [num_classes, num_classes]."""
+        return self._conf.copy()
+
     def reset(self) -> None:
         """Reset accumulated confusion matrix."""
         self._conf[:] = 0
