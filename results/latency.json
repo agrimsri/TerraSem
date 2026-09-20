@@ -1,0 +1,48 @@
+{
+  "hardware": {
+    "processor": "x86_64",
+    "machine": "x86_64",
+    "cpu_count": 12,
+    "cuda_available": true,
+    "gpu_name": "NVIDIA GeForce RTX 3050 Laptop GPU"
+  },
+  "input_resolution": "512x512",
+  "iterations": 50,
+  "benchmarks": {
+    "PyTorch FP32 (GPU)": {
+      "mean_ms": 15.24,
+      "median_ms": 14.61,
+      "p95_ms": 16.08,
+      "std_ms": 2.69,
+      "fps": 68.4
+    },
+    "PyTorch FP32 (CPU)": {
+      "mean_ms": 242.9,
+      "median_ms": 236.62,
+      "p95_ms": 278.88,
+      "std_ms": 24.7,
+      "fps": 4.2
+    },
+    "ONNX FP32 (CPU)": {
+      "mean_ms": 137.19,
+      "median_ms": 134.68,
+      "p95_ms": 149.33,
+      "std_ms": 12.61,
+      "fps": 7.4
+    },
+    "ONNX INT8 Static (CPU)": {
+      "mean_ms": 244.16,
+      "median_ms": 239.89,
+      "p95_ms": 259.36,
+      "std_ms": 21.98,
+      "fps": 4.2
+    },
+    "ONNX INT8 Dynamic (CPU)": {
+      "mean_ms": 289.96,
+      "median_ms": 284.56,
+      "p95_ms": 328.42,
+      "std_ms": 17.46,
+      "fps": 3.5
+    }
+  }
+}

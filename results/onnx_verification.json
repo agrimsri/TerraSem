@@ -1,0 +1,11 @@
+{
+  "verified_images": 20,
+  "max_abs_diff": 6.92903995513916e-06,
+  "mean_abs_diff": 2.5428953431827495e-07,
+  "tolerance_threshold": 0.001,
+  "passed": true,
+  "pytorch_latency_ms": 334.24,
+  "onnx_latency_ms": 132.31,
+  "onnx_path": "checkpoints/segformer_b0.onnx",
+  "onnx_size_mb": 14.47
+}

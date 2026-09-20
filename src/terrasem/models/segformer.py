@@ -105,3 +105,15 @@ class SegFormerB0(nn.Module):
         probs = F.softmax(logits, dim=1)
         max_probs, preds = torch.max(probs, dim=1)
         return preds, max_probs
+
+
+class SegFormerONNXWrapper(nn.Module):
+    """Wrapper that outputs logits tensor directly for clean ONNX export."""
+
+    def __init__(self, model: SegFormerB0) -> None:
+        super().__init__()
+        self.model = model
+
+    def forward(self, image: torch.Tensor) -> torch.Tensor:
+        return self.model(image)["logits"]
+

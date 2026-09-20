@@ -1,0 +1,27 @@
+{
+  "models": {
+    "fp32": {
+      "path": "checkpoints/segformer_b0.onnx",
+      "size_mb": 14.47,
+      "miou_pct": 2.35,
+      "latency_ms": 135.12
+    },
+    "int8_dynamic": {
+      "path": "checkpoints/segformer_b0_int8_dynamic.onnx",
+      "size_mb": 4.14,
+      "miou_pct": 1.54,
+      "miou_delta": -0.81,
+      "latency_ms": 271.06,
+      "speedup_vs_fp32": 0.5
+    },
+    "int8_static": {
+      "path": "checkpoints/segformer_b0_int8_static.onnx",
+      "size_mb": 4.5,
+      "miou_pct": 0.54,
+      "miou_delta": -1.81,
+      "latency_ms": 217.06,
+      "speedup_vs_fp32": 0.62
+    }
+  },
+  "compression_ratio": 3.21
+}

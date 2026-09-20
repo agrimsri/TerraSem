@@ -3,8 +3,8 @@
 <package format="3">
   <name>terrasem_ros</name>
   <version>0.1.0</version>
-  <description>TerraSem ROS 2 nodes: semantic segmentation, voxel fusion, traversability cost map.</description>
-  <maintainer email="agrimsri26@gmail.com">agrimsri</maintainer>
+  <description>Uncertainty-Aware Semantic Occupancy and Traversability Mapping in ROS 2</description>
+  <maintainer email="agrim@terrasem.ai">Agrim</maintainer>
   <license>MIT</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
@@ -14,15 +14,10 @@
   <depend>rclpy</depend>
   <depend>sensor_msgs</depend>
   <depend>nav_msgs</depend>
-  <depend>geometry_msgs</depend>
   <depend>visualization_msgs</depend>
-  <depend>tf2_ros</depend>
   <depend>message_filters</depend>
+  <depend>tf2_ros</depend>
   <depend>cv_bridge</depend>
-  <depend>image_transport</depend>
-
-  <test_depend>ament_lint_auto</test_depend>
-  <test_depend>ament_lint_common</test_depend>
 
   <export>
     <build_type>ament_cmake</build_type>

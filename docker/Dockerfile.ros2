@@ -1,32 +1,43 @@
-# ROS 2 Humble base image (Ubuntu 22.04)
-# See BUILD.md Phase 8.5
+# Multi-stage Dockerfile for TerraSem ROS 2 Humble Stack
 FROM ros:humble-ros-base
 
-# Install Python deps for seg_node and costmap_node
+ENV DEBIAN_FRONTEND=noninteractive
+ENV ROS_DISTRO=humble
+
+# Install system & ROS dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    cmake \
+    git \
     python3-pip \
     python3-colcon-common-extensions \
+    ros-humble-cv-bridge \
+    ros-humble-sensor-msgs-py \
+    ros-humble-message-filters \
+    ros-humble-tf2-ros \
+    ros-humble-nav-msgs \
+    ros-humble-visualization-msgs \
     && rm -rf /var/lib/apt/lists/*
 
-# Install ONNX Runtime for CPU inference
+# Install ONNX Runtime & Python dependencies for CPU inference
 RUN pip3 install --no-cache-dir \
-    onnxruntime \
     numpy \
     opencv-python-headless \
+    onnxruntime \
+    pillow \
     pyyaml
 
-# Copy the ROS 2 workspace
-COPY ros2_ws/ /terrasem_ws/
+# Create ROS 2 workspace
+WORKDIR /ros2_ws
+COPY ros2_ws/src /ros2_ws/src
+COPY checkpoints/segformer_b0_int8_dynamic.onnx /ros2_ws/checkpoints/segformer_b0_int8_dynamic.onnx
 
-WORKDIR /terrasem_ws
+# Source base ROS and build overlay
+RUN /bin/bash -c "source /opt/ros/humble/setup.bash && colcon build --symlink-install"
 
-# Build the package
-RUN /bin/bash -c "source /opt/ros/humble/setup.bash && \
-    colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release"
+# Set up entrypoint
+COPY docker/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
-# Source overlay on container start
-COPY docker/ros2_entrypoint.sh /ros2_entrypoint.sh
-RUN chmod +x /ros2_entrypoint.sh
-
-ENTRYPOINT ["/ros2_entrypoint.sh"]
-CMD ["bash"]
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["ros2", "launch", "terrasem_ros", "terrasem_bringup.launch.py"]
