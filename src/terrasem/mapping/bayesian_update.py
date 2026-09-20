@@ -76,9 +76,9 @@ def dda_voxel_traversal(
             return float("inf"), float("inf")
         next_boundary = (math.floor(pos / vs) + 1.0) * vs if step > 0 else math.floor(pos / vs) * vs
         t_max = (next_boundary - pos) / delta_pos
+
         t_delta = (vs * step) / delta_pos
         return t_max, abs(t_delta)
-
 
     t_max_x, t_delta_x = init_axis(origin[0], step_x, dx)
     t_max_y, t_delta_y = init_axis(origin[1], step_y, dy)

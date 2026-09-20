@@ -78,3 +78,4 @@ def test_reliability_diagram():
     assert "bin_counts" in diag
     assert "ece" in diag
     assert len(diag["bin_accuracies"]) == 10
+

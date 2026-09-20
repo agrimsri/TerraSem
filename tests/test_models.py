@@ -60,3 +60,4 @@ def test_model_predict_helper():
     assert probs.shape == (1, 64, 64)
     assert probs.min() >= 0.0 and probs.max() <= 1.0
     assert preds.min() >= 0 and preds.max() < 11
+

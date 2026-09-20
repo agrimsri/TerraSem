@@ -1,0 +1,20 @@
+{
+  "sequence": "00004",
+  "trajectory_length_m": 7.49,
+  "num_trajectory_points": 50,
+  "voxel_size_m": 0.2,
+  "ablation": {
+    "baseline_no_uncertainty": {
+      "lambda_uncertainty": 0.0,
+      "trajectory_agreement": 0.7917,
+      "false_lethal_rate": 0.0417,
+      "mean_cost": 0.1965
+    },
+    "proposed_uncertainty_aware": {
+      "lambda_uncertainty": 0.3,
+      "trajectory_agreement": 0.5833,
+      "false_lethal_rate": 0.0417,
+      "mean_cost": 0.2803
+    }
+  }
+}

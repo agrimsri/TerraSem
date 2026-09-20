@@ -64,11 +64,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--raycast-stride", type=int, default=4, help="Raycast every Nth point for freespace (default: 4).")
     parser.add_argument("--max-range", type=float, default=35.0, help="Max LiDAR range to consider in metres (default: 35.0).")
     parser.add_argument("--enable-freespace", action="store_true", default=True, help="Enable DDA freespace raycasting.")
-    parser.add_argument("--load-npz", type=str, default=None, help="Path to existing .npz map to load and render.")
     parser.add_argument("--output-dir", type=str, default="results/maps", help="Directory for map outputs.")
     parser.add_argument("--fig-dir", type=str, default="results/figs", help="Directory for figure outputs.")
     return parser.parse_args()
-
 
 
 def main() -> None:
@@ -112,86 +110,73 @@ def main() -> None:
         label_files = sorted(data_dir.glob("Rellis_3D_lidar_example/os1_cloud_node_semantickitti_label_id/*.label"))
     print(f"Found {len(label_files)} LiDAR label files.")
 
-
     # Initialize Voxel Grid
     grid = VoxelGrid(voxel_size=args.voxel_size, prior_alpha=0.1)
 
     # Class colour map
     class_rgbs = np.array([hex_to_rgb(c) for c in CLASS_COLOURS_HEX])
 
-    frames_processed = args.num_frames
-    if args.load_npz and Path(args.load_npz).exists():
-        print(f"Loading precomputed voxel grid from {args.load_npz}...")
-        npz_data = np.load(args.load_npz)
-        coords = npz_data["coords"]
-        log_odds_vals = npz_data["log_odds"]
-        alpha_vals = npz_data["alpha"]
-        for idx in range(len(coords)):
-            key = (int(coords[idx, 0]), int(coords[idx, 1]), int(coords[idx, 2]))
-            vox = grid.get_or_create(key)
-            vox.log_odds = float(log_odds_vals[idx])
-            vox.alpha = alpha_vals[idx].copy()
-        print(f"Loaded {len(grid)} voxels from NPZ successfully.")
-    else:
-        # 2. Iterate frames and build map
-        frames_processed = 0
-        for f_idx in range(0, min(args.num_frames * args.frame_stride, len(poses_raw)), args.frame_stride):
-            if frames_processed >= args.num_frames:
-                break
+    # 2. Iterate frames and build map
+    frames_processed = 0
 
-            # Pose for frame f_idx: 12 elements -> 3x4
-            pose_row = poses_raw[f_idx]
-            T_world_lidar = np.eye(4, dtype=np.float64)
-            T_world_lidar[:3, :4] = pose_row.reshape(3, 4)
-            R_world = T_world_lidar[:3, :3]
-            t_world = T_world_lidar[:3, 3]
+    for f_idx in range(0, min(args.num_frames * args.frame_stride, len(poses_raw)), args.frame_stride):
 
-            # Select bin scan
-            bin_path = bin_files[frames_processed % len(bin_files)]
-            raw_pts = np.fromfile(bin_path, dtype=np.float32).reshape(-1, 4)
-            pts_local = raw_pts[:, :3].astype(np.float64)
+        if frames_processed >= args.num_frames:
+            break
 
-            # Select label file
-            pt_labels = np.zeros(len(pts_local), dtype=np.int64)
-            if label_files:
-                lbl_path = label_files[frames_processed % len(label_files)]
-                raw_labels = np.fromfile(lbl_path, dtype=np.uint32)
-                if len(raw_labels) == len(pts_local):
-                    sem_ids = raw_labels & 0xFFFF
-                    # Map to TerraSem-11
-                    for i in range(len(sem_ids)):
-                        pt_labels[i] = RELLIS3D_TO_TERRASEM.get(int(sem_ids[i]), 10)
+        # Pose for frame f_idx: 12 elements -> 3x4
+        pose_row = poses_raw[f_idx]
+        T_world_lidar = np.eye(4, dtype=np.float64)
+        T_world_lidar[:3, :4] = pose_row.reshape(3, 4)
+        R_world = T_world_lidar[:3, :3]
+        t_world = T_world_lidar[:3, 3]
 
-            # Filter by distance
-            ranges = np.linalg.norm(pts_local, axis=1)
-            valid_range = (ranges > 1.0) & (ranges <= args.max_range)
-            subsample = np.arange(0, len(pts_local), 2)
-            valid_idx = np.intersect1d(np.where(valid_range)[0], subsample)
+        # Select bin scan
+        bin_path = bin_files[frames_processed % len(bin_files)]
+        raw_pts = np.fromfile(bin_path, dtype=np.float32).reshape(-1, 4)
+        pts_local = raw_pts[:, :3].astype(np.float64)
 
-            pts_filt = pts_local[valid_idx]
-            lbls_filt = pt_labels[valid_idx]
+        # Select label file
+        pt_labels = np.zeros(len(pts_local), dtype=np.int64)
+        if label_files:
+            lbl_path = label_files[frames_processed % len(label_files)]
+            raw_labels = np.fromfile(lbl_path, dtype=np.uint32)
+            if len(raw_labels) == len(pts_local):
+                sem_ids = raw_labels & 0xFFFF
+                # Map to TerraSem-11
+                for i in range(len(sem_ids)):
+                    pt_labels[i] = RELLIS3D_TO_TERRASEM.get(int(sem_ids[i]), 10)
 
-            # Transform to world coordinates: P_world = R_world @ P_lidar + t_world
-            pts_world = (R_world @ pts_filt.T).T + t_world
+        # Filter by distance
+        ranges = np.linalg.norm(pts_local, axis=1)
+        valid_range = (ranges > 1.0) & (ranges <= args.max_range)
+        # Subsample for update efficiency (65k points/frame)
+        subsample = np.arange(0, len(pts_local), 2)
+        valid_idx = np.intersect1d(np.where(valid_range)[0], subsample)
 
-            # Point confidences
-            pt_confs = np.random.uniform(0.85, 0.95, size=len(pts_filt)).astype(np.float32)
+        pts_filt = pts_local[valid_idx]
+        lbls_filt = pt_labels[valid_idx]
 
-            # Update voxel grid
-            update_voxel_grid(
-                voxel_grid=grid,
-                sensor_origin=t_world,
-                hit_points=pts_world,
-                point_labels=lbls_filt,
-                point_confs=pt_confs,
-                enable_freespace=args.enable_freespace,
-                raycast_stride=args.raycast_stride,
-            )
+        # Transform to world coordinates: P_world = R_world @ P_lidar + t_world
+        pts_world = (R_world @ pts_filt.T).T + t_world
 
-            frames_processed += 1
-            if frames_processed % 20 == 0 or frames_processed == args.num_frames:
-                print(f"Processed frame {frames_processed}/{args.num_frames} | Current voxels: {len(grid)}")
+        # Point confidences (simulate detector / sensor confidence: 0.85-0.98)
+        pt_confs = np.random.uniform(0.85, 0.95, size=len(pts_filt)).astype(np.float32)
 
+        # Update voxel grid
+        update_voxel_grid(
+            voxel_grid=grid,
+            sensor_origin=t_world,
+            hit_points=pts_world,
+            point_labels=lbls_filt,
+            point_confs=pt_confs,
+            enable_freespace=args.enable_freespace,
+            raycast_stride=args.raycast_stride,
+        )
+
+        frames_processed += 1
+        if frames_processed % 20 == 0 or frames_processed == args.num_frames:
+            print(f"Processed frame {frames_processed}/{args.num_frames} | Current voxels: {len(grid)}")
 
     elapsed_time = time.perf_counter() - start_time
     current_ram, peak_ram = tracemalloc.get_traced_memory()
@@ -360,7 +345,7 @@ def main() -> None:
     # -1 is unknown (grey), 0-100 traversability
     masked_occ = np.ma.masked_where(occ_grid == -1, occ_grid)
     cmap_occ = matplotlib.colormaps["RdYlGn_r"]
-    axes[0, 1].set_facecolor("#d3d3d3")  # Light gray background for unknown
+    axes[0, 1].set_facecolor("#d3d3d3")  # Light gray for unknown
     im1 = axes[0, 1].imshow(masked_occ, origin="lower", cmap=cmap_occ, vmin=0, vmax=100)
 
     axes[0, 1].set_title("ROS OccupancyGrid (0=Safe, 100=Lethal, Gray=Unknown)", fontsize=12, fontweight="bold")
