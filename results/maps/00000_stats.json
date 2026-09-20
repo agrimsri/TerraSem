@@ -1,0 +1,13 @@
+{
+  "sequence": "00000",
+  "num_frames": 100,
+  "voxel_size_m": 0.2,
+  "total_voxels": 294021,
+  "occupied_voxels": 37101,
+  "wall_time_sec": 6.68,
+  "peak_ram_mb": 149.28,
+  "raycast_stride": 4,
+  "max_range_m": 35.0,
+  "ece_percent": 19.8,
+  "brier_score": 0.1556
+}

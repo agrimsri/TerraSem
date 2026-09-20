@@ -41,6 +41,7 @@ CLASSES: list[tuple[int, str, str]] = [
 
 CLASS_NAMES: list[str] = [c[1] for c in CLASSES]
 CLASS_COLOURS_HEX: list[str] = [c[2] for c in CLASSES]
+CLASS_TO_ID: dict[str, int] = {c[1]: c[0] for c in CLASSES}
 
 
 # ---------------------------------------------------------------------------

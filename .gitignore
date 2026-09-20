@@ -5,6 +5,9 @@ checkpoints/
 *.pt
 *.ckpt
 *.pth
+*.ply
+*.npz
+
 
 # Python
 __pycache__/
